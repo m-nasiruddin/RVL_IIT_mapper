@@ -22,7 +22,6 @@ for ltdlwocr in root.iter('LTDLWOCR'):
     for bt, ot in zip(ltdlwocr.iter('bt'), ltdlwocr.iter('ot')):
         new_bt = bt.text.split('/')[0]
         if new_bt in str(rvlcdip_list):
-            print(new_bt)
             bt_ot_dict.update({new_bt : ot.text})
 
 for key, value in bt_ot_dict.items():
