@@ -6,23 +6,28 @@ Created on Thu Apr 19 18:21:15 2018
 @author: Nasiruddin
 """
 
-import xml.etree.ElementTree as et
-import re
+import codecs
+import os
+import xml.etree.ElementTree as eT
 
-source = open('data/input/val.txt', 'r')
+source = codecs.open('data/input/val_small.txt', 'r', 'utf-8')
 corpus = source.readlines()
-rvlcdip_list = []
+rvlcdip_dict = {}
 for line in corpus:
-    rvlcdip_list.append(re.findall(r'[+_a-z0-9\.-]*.tif', line))
+    rvlcdip_dict.update({os.path.split(line)[1].split()[0].replace('+-', '/').replace('_', '/').replace('-', '/'):
+                             os.path.split(line)[1].split()[0]})
 
 bt_ot_dict = {}
-tree = et.parse('data/input/iitcdip.a.a.xml')
+unmatched_list = []
+tree = eT.parse('data/input/iitcdip.a.a_small.xml')
 root = tree.getroot()
 for ltdlwocr in root.iter('LTDLWOCR'):
     for bt, ot in zip(ltdlwocr.iter('bt'), ltdlwocr.iter('ot')):
-        new_bt = bt.text.split('/')[0]
-        if new_bt in str(rvlcdip_list):
-            bt_ot_dict.update({new_bt : ot.text})
+        bt_text = bt.text + '.tif'
+        if bt_text in rvlcdip_dict:
+            bt_ot_dict.update({rvlcdip_dict[bt_text].split('.')[0]: ot.text})
 
 for key, value in bt_ot_dict.items():
-    print(key, value)
+    file = codecs.open('data/output/{0}.txt'.format(key), 'w', 'utf-8')
+    file.write(value)
+    file.close()
