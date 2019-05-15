@@ -3,7 +3,7 @@
 """
 Created on Thu Apr 19 16:56:18 2018
 
-@author: osboxes
+@author: Mohammad Nasiruddin
 """
 
 import codecs
